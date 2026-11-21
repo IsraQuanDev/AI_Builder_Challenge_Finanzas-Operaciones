@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taranis Black | Panel Financiero Inteligente & Diagnóstico Lean (Ruta 4)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              dark: '#1e293b',
+              accent: '#d97706',
+              gold: '#b45309',
+              blue: '#2563eb',
+              emerald: '#059669',
+              rose: '#e11d48',
+              slate: '#64748b',
+              light: '#f8fafc'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f1f5f9; }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(217, 119, 6, 0.4);
+      transform: translateY(-2px);
+      transition: all 0.25s ease;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scroll">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-amber-500/20">
+          TB
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-lg tracking-tight text-white">TARANIS BLACK</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-medium">Ruta 4: Finanzas & Operaciones</span>
+          </div>
+          <p class="text-xs text-slate-400">CHALLENGE ONE G11 | Alura & Oracle Next Education</p>
+        </div>
+      </div>
+
+      <!-- Student Identification Badge -->
+      <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs">
+        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+        <div>
+          <span class="text-slate-400">Estudiante:</span>
+          <span class="font-semibold text-slate-200 ml-1">Francisco Israel Mesillas Hernández</span>
+        </div>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-400 font-mono">israel.mecillas@gmail.com</span>
+        <span class="bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded font-mono border border-blue-700/50">Cohorte G11</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="bg-slate-900/60 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 overflow-x-auto py-2 custom-scroll text-sm">
+      <button onclick="switchTab('tab-kpis')" id="btn-tab-kpis" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all bg-amber-500 text-slate-950 shadow-md">
+        📊 Tablero Ejecutivo & Variaciones
+      </button>
+      <button onclick="switchTab('tab-lean')" id="btn-tab-lean" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        🧭 Diagnóstico Lean (SIPOC & Ishikawa 6M)
+      </button>
+      <button onclick="switchTab('tab-sim')" id="btn-tab-sim" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        🔮 Simulador Predictivo Q1 2027
+      </button>
+      <button onclick="switchTab('tab-gov')" id="btn-tab-gov" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        🛡️ AI Canvas & Gobernanza LGPD
+      </button>
+      <button onclick="switchTab('tab-prompts')" id="btn-tab-prompts" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        📋 Prompts Claude & Evidencias
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: TABLERO EJECUTIVO & VARIACIONES    -->
+    <!-- ========================================== -->
+    <div id="tab-kpis" class="tab-content space-y-8">
+      
+      <!-- Executive Summary Banner -->
+      <div class="glass-card rounded-2xl p-6 border-l-4 border-amber-500 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20 mb-2">
+              <span>Diagnóstico de Presidencia & Controllería</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Erosión Operativa de EBITDA: Análisis Financiero Taranis Black</h1>
+            <p class="text-slate-300 text-sm mt-1 max-w-4xl">
+              A pesar de un sólido cumplimiento de ventas brutas por <span class="text-emerald-400 font-semibold">USD 48.50M</span> (99.8% de meta), el EBITDA colapsó de <span class="text-slate-400 font-semibold">USD 9.85M</span> presupuestados a <span class="text-rose-400 font-semibold">USD 5.77M</span> reales (<span class="text-rose-400 font-bold">-41.4%</span>). La destrucción de <span class="text-rose-400 font-bold">USD 4,078,000</span> responde a fallas operativas originadas por procesos manuales desconectados y un retraso crónico de 5 días en la aprobación y cierre contable.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="bg-rose-500/10 border border-rose-500/30 px-4 py-3 rounded-xl text-center">
+              <span class="block text-xs uppercase text-rose-300 font-medium">EBITDA Perdido</span>
+              <span class="text-2xl font-black text-rose-400">-USD 4.08M</span>
+            </div>
+            <div class="bg-amber-500/10 border border-amber-500/30 px-4 py-3 rounded-xl text-center">
+              <span class="block text-xs uppercase text-amber-300 font-medium">Retraso Cierre</span>
+              <span class="text-2xl font-black text-amber-400">+5 Días</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top KPI Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Card 1 -->
+        <div class="glass-card rounded-xl p-5 border border-slate-800 glass-card-hover">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ingresos Brutos Reales</span>
+            <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">99.8% Meta</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold text-white">USD 48.50M</span>
+            <span class="text-xs text-slate-400 line-through">USD 48.60M</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">B2B: USD 33.6M (70%) | D2C: USD 14.9M (30%)</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card rounded-xl p-5 border border-slate-800 glass-card-hover">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Fletes Expresos CD</span>
+            <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-mono">+57.1% Desvío</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold text-rose-400">USD 3.74M</span>
+            <span class="text-xs text-slate-400 line-through">USD 2.38M</span>
+          </div>
+          <p class="text-xs text-rose-400/80 mt-2">Sobrecosto de USD +1,360,000 en fletes urgentes</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card rounded-xl p-5 border border-slate-800 glass-card-hover">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Cancelaciones x Demora</span>
+            <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-mono">+120.5% Desvío</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold text-rose-400">USD 1.23M</span>
+            <span class="text-xs text-slate-400 line-through">USD 560k</span>
+          </div>
+          <p class="text-xs text-rose-400/80 mt-2">Pérdida neta de USD +675,000 por retención de 48h</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-card rounded-xl p-5 border border-slate-800 glass-card-hover">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Morosidad B2B (PDD)</span>
+            <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-mono">3.4% Receta</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold text-rose-400">USD 1.11M</span>
+            <span class="text-xs text-slate-400 line-through">USD 440k</span>
+          </div>
+          <p class="text-xs text-rose-400/80 mt-2">Benchmark: 1.2% | +2.2 p.p. por cobranza manual</p>
+        </div>
+
+      </div>
+
+      <!-- Charts Section: Quarterly Trend & OPEX Breakdown -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Chart 1: Quarterly Collapse of EBITDA vs Revenue -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 class="font-bold text-white text-base">Evolución Trimestral: Ingresos vs. Colapso de EBITDA (USD)</h3>
+              <p class="text-xs text-slate-400">Observe cómo el EBITDA cae 43% en T3 y T4 a medida que crecen las ventas</p>
+            </div>
+            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded font-mono">T1 — T4</span>
+          </div>
+          <div class="h-72">
+            <canvas id="chartQuarterly"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Friction Cost Waterfall -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 class="font-bold text-white text-base">Desglose de Sobrecostos Operativos (Total: USD 3.89M)</h3>
+              <p class="text-xs text-slate-400">Costo cuantificado de los cuellos de botella manuales en el año</p>
+            </div>
+            <span class="text-xs bg-rose-950/60 text-rose-400 border border-rose-800/40 px-2.5 py-1 rounded font-mono">Pérdidas</span>
+          </div>
+          <div class="h-72">
+            <canvas id="chartFrictionCosts"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Financial Table: Budget vs Real Consolidated -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-800">
+        <h3 class="font-bold text-lg text-white mb-2">Estado de Resultados Consolidado: Presupuestado vs. Realizado</h3>
+        <p class="text-xs text-slate-400 mb-4">Datos extraídos formalmente de <code class="text-amber-400 font-mono">05_Finanzas_Presupuesto_vs_Real.xlsx</code></p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/80 text-slate-300">
+                <th class="py-3 px-4 font-semibold">Línea Contable / Cuenta</th>
+                <th class="py-3 px-4 font-semibold text-right">Presupuesto (USD)</th>
+                <th class="py-3 px-4 font-semibold text-right">Realizado (USD)</th>
+                <th class="py-3 px-4 font-semibold text-right">Desviación (USD)</th>
+                <th class="py-3 px-4 font-semibold text-right">Variación (%)</th>
+                <th class="py-3 px-4 font-semibold">Causa Raíz Operativa</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-slate-300">
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2.5 px-4 font-medium text-white">Ingresos Brutos por Ventas (B2B + D2C)</td>
+                <td class="py-2.5 px-4 text-right font-mono">48,600,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-emerald-400">48,500,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-slate-400">-100,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-slate-400">-0.2%</td>
+                <td class="py-2.5 px-4 text-slate-400">Demanda sólida; canal D2C compensa retrasos en B2B</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 bg-rose-950/10">
+                <td class="py-2.5 px-4 font-medium text-rose-300">(-) Cancelaciones por Retraso Logístico</td>
+                <td class="py-2.5 px-4 text-right font-mono">560,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">1,235,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">+675,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+120.5%</td>
+                <td class="py-2.5 px-4 text-slate-300">Retención de 48h para aprobación de crédito en bandeja de gerencia</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2.5 px-4 font-medium text-white">Ingresos Operativos Netos</td>
+                <td class="py-2.5 px-4 text-right font-mono">39,778,000</td>
+                <td class="py-2.5 px-4 text-right font-mono">39,020,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">-758,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">-1.9%</td>
+                <td class="py-2.5 px-4 text-slate-400">Afectado por cancelaciones directas antes de entrega</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2.5 px-4 font-medium text-white">Costo de Mercancías Vendidas (CMV)</td>
+                <td class="py-2.5 px-4 text-right font-mono">20,080,000</td>
+                <td class="py-2.5 px-4 text-right font-mono">20,590,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">+510,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">+2.5%</td>
+                <td class="py-2.5 px-4 text-slate-400">Reprocesos fabriles y desajustes de stock en fábrica</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 bg-rose-950/10">
+                <td class="py-2.5 px-4 font-medium text-rose-300">(-) Fletes y Logística de Entrega CD</td>
+                <td class="py-2.5 px-4 text-right font-mono">2,380,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">3,740,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+1,360,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+57.1%</td>
+                <td class="py-2.5 px-4 text-slate-300">Fletes expresos contratados de emergencia para mitigar atraso de 5 días</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 bg-rose-950/10">
+                <td class="py-2.5 px-4 font-medium text-rose-300">(-) Reentregas y Multas por Divergencia</td>
+                <td class="py-2.5 px-4 text-right font-mono">210,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">725,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+515,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+245.2%</td>
+                <td class="py-2.5 px-4 text-slate-300">6.8% de órdenes emitidas con errores de código de producto/tela</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 bg-rose-950/10">
+                <td class="py-2.5 px-4 font-medium text-rose-300">(-) Provisión Deudores Dudosos (Inadimplencia)</td>
+                <td class="py-2.5 px-4 text-right font-mono">440,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">1,110,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+670,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400 font-bold">+152.3%</td>
+                <td class="py-2.5 px-4 text-slate-300">Falta de cobranza automatizada y seguimiento predictivo de vencimientos</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2.5 px-4 font-medium text-slate-300">(-) Gastos Administrativos & Sistemas</td>
+                <td class="py-2.5 px-4 text-right font-mono">1,760,000</td>
+                <td class="py-2.5 px-4 text-right font-mono">2,020,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">+260,000</td>
+                <td class="py-2.5 px-4 text-right font-mono text-rose-400">+14.8%</td>
+                <td class="py-2.5 px-4 text-slate-400">Horas extras de asistentes y auditorías de cierre contable mensual</td>
+              </tr>
+              <tr class="border-t-2 border-slate-700 bg-slate-900 font-bold text-white">
+                <td class="py-3 px-4 text-amber-400">EBITDA OPERACIONAL</td>
+                <td class="py-3 px-4 text-right font-mono">9,848,000</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400">5,770,000</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400 font-black">-4,078,000</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400 font-black">-41.4%</td>
+                <td class="py-3 px-4 text-amber-300">Margen EBITDA se desplomó del 20.3% presupuestado al 11.9% real</td>
+              </tr>
+              <tr class="border-t border-slate-800 bg-slate-950 font-semibold text-slate-300">
+                <td class="py-3 px-4 text-white">Lucro Líquido del Ejercicio</td>
+                <td class="py-3 px-4 text-right font-mono">5,965,080</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400 font-bold">3,108,600</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400">-2,856,480</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400">-47.9%</td>
+                <td class="py-3 px-4 text-slate-400">Casi 3 millones de dólares en ganancias netas evaporadas</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: DIAGNÓSTICO LEAN (SIPOC & ISHIKAWA)-->
+    <!-- ========================================== -->
+    <div id="tab-lean" class="tab-content hidden space-y-8">
+      
+      <!-- SIPOC Header -->
+      <div class="glass-card rounded-2xl p-6 border-l-4 border-blue-500">
+        <h2 class="text-2xl font-bold text-white">Mapeo del Macroproceso As-Is: Matriz SIPOC</h2>
+        <p class="text-sm text-slate-300 mt-1">
+          Flujo: <span class="text-blue-400 font-semibold">«Aprobación de Solicitudes, Facturación y Expedición B2B»</span>.
+          De un tiempo de ciclo total de <span class="text-rose-400 font-bold">>5 días hábiles</span>, el tiempo real de agregación de valor es de apenas <span class="text-emerald-400 font-semibold">65 minutos</span> (98.7% es muda / tiempo de espera burocrático).
+        </p>
+      </div>
+
+      <!-- SIPOC Columns Visualizer -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        
+        <!-- S -->
+        <div class="glass-card rounded-xl p-4 border-t-4 border-indigo-500">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-6 h-6 rounded bg-indigo-500/20 text-indigo-400 font-bold text-xs flex items-center justify-center font-mono">S</span>
+            <h4 class="font-bold text-white text-sm">Suppliers (Proveedores)</h4>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300">
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-indigo-300 block">Consultores B2B & SDRs</span>
+              Envían propuestas comerciales firmadas en PDF vía email informal.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-indigo-300 block">Clientes Corporativos</span>
+              Compradores de grandes cuentas (Facilities y Compras).
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-indigo-300 block">Buró Serasa Experian</span>
+              Consulta manual vía portal web externo.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-indigo-300 block">Gerente Financiero</span>
+              Aprobador individual y cuello de botella de alzada.
+            </li>
+          </ul>
+        </div>
+
+        <!-- I -->
+        <div class="glass-card rounded-xl p-4 border-t-4 border-sky-500">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-6 h-6 rounded bg-sky-500/20 text-sky-400 font-bold text-xs flex items-center justify-center font-mono">I</span>
+            <h4 class="font-bold text-white text-sm">Inputs (Entradas)</h4>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300">
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-sky-300 block">Propuesta en PDF</span>
+              No estructurada, escaneada o con datos incompletos.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-sky-300 block">Ficha Fiscal CNPJ/IE</span>
+              Tarjeta tributaria y comprobante de dirección.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-sky-300 block">Score & Deudas Serasa</span>
+              Consulta manual de 40 minutos por cada propuesta.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-sky-300 block">Excel de Límites</span>
+              <code class="text-amber-400 font-mono">Controle_Limites_2026.xlsx</code>
+            </li>
+          </ul>
+        </div>
+
+        <!-- P -->
+        <div class="glass-card rounded-xl p-4 border-t-4 border-amber-500 bg-amber-950/10">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-6 h-6 rounded bg-amber-500 text-slate-950 font-bold text-xs flex items-center justify-center font-mono">P</span>
+            <h4 class="font-bold text-amber-400 text-sm">Process (Macroproceso)</h4>
+          </div>
+          <ol class="text-xs space-y-2 text-slate-200">
+            <li class="bg-slate-900 p-2 rounded border border-amber-500/30">
+              <span class="font-bold text-amber-400">1. Recepción en Email</span>
+              >40 correos/día sin prioridad.
+            </li>
+            <li class="bg-slate-900 p-2 rounded border border-amber-500/30">
+              <span class="font-bold text-amber-400">2. Consulta Crédito</span>
+              40 min/pedido en 3 ventanas.
+            </li>
+            <li class="bg-slate-900 p-2 rounded border border-rose-500/50 bg-rose-950/20">
+              <span class="font-bold text-rose-400">3-4. Aprobación Gerente</span>
+              Retención de <span class="underline font-bold">24h a 48h hábiles</span>.
+            </li>
+            <li class="bg-slate-900 p-2 rounded border border-amber-500/30">
+              <span class="font-bold text-amber-400">5. NF-e & Despacho</span>
+              Digitación manual en ERP (6.8% error).
+            </li>
+          </ol>
+        </div>
+
+        <!-- O -->
+        <div class="glass-card rounded-xl p-4 border-t-4 border-emerald-500">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center font-mono">O</span>
+            <h4 class="font-bold text-white text-sm">Outputs (Salidas)</h4>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300">
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-emerald-300 block">Orden de Venta en ERP</span>
+              Frecuentemente con errores en códigos de tela.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-emerald-300 block">NF-e & Boletos 30/60/90</span>
+              Documentos fiscales emitidos con 5 días de retraso.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-emerald-300 block">Picking List Joinville</span>
+              Lista de separación enviada por correo manual.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-emerald-300 block">Mercancía en Tránsito</span>
+              Frecuentes fletes expresos por urgencia.
+            </li>
+          </ul>
+        </div>
+
+        <!-- C -->
+        <div class="glass-card rounded-xl p-4 border-t-4 border-purple-500">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-6 h-6 rounded bg-purple-500/20 text-purple-400 font-bold text-xs flex items-center justify-center font-mono">C</span>
+            <h4 class="font-bold text-white text-sm">Customers (Clientes)</h4>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300">
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-purple-300 block">Cliente Corporativo B2B</span>
+              Insatisfecho por demoras y reclamos de plazos.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-purple-300 block">CD Joinville (SC)</span>
+              Sufre camiones parados por flete CIF/FOB divergente.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-purple-300 block">Área de Controllería</span>
+              Padece 5 días de horas extras para cerrar el mes.
+            </li>
+            <li class="bg-slate-900/60 p-2 rounded border border-slate-800">
+              <span class="font-semibold text-purple-300 block">Transportadoras</span>
+              Cobran estadías y fletes dobles de reentrega.
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Ishikawa Fishbone 6M Structured Section -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="font-bold text-xl text-white">Diagrama de Causa y Efecto (Ishikawa — Las 6M)</h3>
+            <p class="text-xs text-slate-400">Análisis causal de fondo del retraso crónico y los errores en facturación</p>
+          </div>
+          <div class="bg-rose-950/80 border border-rose-700/50 px-3 py-1.5 rounded-lg text-rose-300 text-xs font-semibold">
+            Efecto: Retraso de 5 Días en Cierre Contable & Fletes de USD 3.74M
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          
+          <!-- 1. Método -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-amber-400 font-bold text-sm">⚙️ 1. MÉTODO</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• Inexistencia de POP documentado y auditable.</li>
+              <li>• Flujo de aprobación informal 100% por correo electrónico.</li>
+              <li>• Ausencia de matriz de alzada: cualquier pedido exige visto bueno del gerente.</li>
+              <li>• No verificación previa de flete CIF vs. FOB al firmar.</li>
+            </ul>
+          </div>
+
+          <!-- 2. Máquina -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-blue-400 font-bold text-sm">💻 2. MÁQUINA (Sistemas)</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• ERP legado monolítico sin endpoints ni integración API.</li>
+              <li>• Cero capacidades de OCR o visión para leer PDFs firmados.</li>
+              <li>• Dependencia de 3 hojas Excel desincronizadas en red local.</li>
+              <li>• Consulta manual a Serasa sin integración directa.</li>
+            </ul>
+          </div>
+
+          <!-- 3. Mano de Obra -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-emerald-400 font-bold text-sm">👥 3. MANO DE OBRA</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• Asistentes financieros agotados copiando datos (burnout).</li>
+              <li>• 40 minutos gastados por pedido en tareas mecánicas.</li>
+              <li>• Gerente ausente por comités ejecutivos y viajes a Joinville.</li>
+              <li>• Desmotivación en cierres de mes con turnos de madrugada.</li>
+            </ul>
+          </div>
+
+          <!-- 4. Material -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-purple-400 font-bold text-sm">📄 4. MATERIAL (Insumos)</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• Propuestas con campos vacíos o ilegibles de vendedores.</li>
+              <li>• Divergencias entre códigos de catálogo comercial y ERP.</li>
+              <li>• Domicilios fiscales no actualizados de clientes B2B.</li>
+              <li>• Fichas técnicas desactualizadas en ventas.</li>
+            </ul>
+          </div>
+
+          <!-- 5. Medición -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-pink-400 font-bold text-sm">📊 5. MEDICIÓN</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• Cero monitoreo de SLAs por etapa en tiempo real.</li>
+              <li>• La Dirección General descubre los retrasos a mes vencido.</li>
+              <li>• Inexistencia de métricas de pedidos retenidos por área.</li>
+              <li>• Falta de tablero de alertas tempranas de morosidad.</li>
+            </ul>
+          </div>
+
+          <!-- 6. Medio Ambiente -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-teal-400 font-bold text-sm">🏢 6. MEDIO AMBIENTE</span>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+              <li>• Distancia y desconexión entre oficina comercial (SP) y CD (SC).</li>
+              <li>• Cultura reactiva de "apagar incendios" en lugar de prevención.</li>
+              <li>• Fricciones y culpas cruzadas entre Comercial, Finanzas y CD.</li>
+              <li>• Tensión comercial a final de mes por presiones de cuota.</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- The 3 Root Causes & Priority Action Callout -->
+        <div class="mt-6 p-5 rounded-xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/30">
+          <h4 class="font-bold text-white text-base flex items-center gap-2">
+            <span class="text-amber-400 text-lg">★</span>
+            Las 3 Causas Raíz Críticas & Intervención Inmediata
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 text-xs">
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+              <span class="font-bold text-rose-400 block mb-1">1. Retención en Aprobación de Crédito</span>
+              48 horas en la bandeja de entrada del gerente para cualquier monto. Provoca <span class="font-bold text-white">USD 1.25M en cancelaciones</span> por clientes frustrados.
+            </div>
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+              <span class="font-bold text-rose-400 block mb-1">2. Copia Manual de Propuestas al ERP</span>
+              Tasa de error del 6.8% en NF-e y órdenes al CD. Causa <span class="font-bold text-white">USD 960k en fletes de emergencia</span> y <span class="font-bold text-white">USD 725k en reentregas</span>.
+            </div>
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+              <span class="font-bold text-rose-400 block mb-1">3. Conciliación en 3 Excels Locales</span>
+              Atraso crónico de 5 días en el cierre de mes, generando <span class="font-bold text-white">USD 180k en horas extras</span> y <span class="font-bold text-white">USD 1.11M en morosidad desatendida</span>.
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300">
+            <span class="font-bold text-amber-400">Intervención Prioritaria:</span> Implementar en el Mes 1 el <span class="font-semibold text-white">Agente Inteligente de Ingesta OCR+LLM y Motor de Reglas de Crédito</span>. Al liberar la retención de 48h y cargar las órdenes limpias en 15 minutos, se neutraliza de raíz el 70% de las pérdidas operativas antes de abordar la conciliación contable.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: SIMULADOR PREDICTIVO Q1 2027       -->
+    <!-- ========================================== -->
+    <div id="tab-sim" class="tab-content hidden space-y-8">
+      
+      <div class="glass-card rounded-2xl p-6 border-l-4 border-emerald-500">
+        <h2 class="text-2xl font-bold text-white">Simulador Financiero Predictivo — Proyección T1 2027</h2>
+        <p class="text-sm text-slate-300 mt-1">
+          Ajuste los deslizadores para simular el impacto en tiempo real de las iniciativas de IA en el margen EBITDA trimestral de Taranis Black.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Controls Column -->
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-5">
+          <h3 class="font-bold text-white text-base border-b border-slate-800 pb-3">Palancas de Optimización con IA</h3>
+          
+          <!-- Slider 1 -->
+          <div>
+            <div class="flex justify-between text-xs font-medium mb-1">
+              <span class="text-slate-300">Reducción de Fletes Urgentes:</span>
+              <span id="lblFreightReduction" class="text-amber-400 font-bold font-mono">60%</span>
+            </div>
+            <input type="range" id="sliderFreight" min="0" max="90" value="60" step="5" oninput="runSimulation()" class="w-full accent-amber-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            <p class="text-[11px] text-slate-500 mt-1">Baja de 2.8% a ~1.0% de facturación al eliminar dobles envíos.</p>
+          </div>
+
+          <!-- Slider 2 -->
+          <div>
+            <div class="flex justify-between text-xs font-medium mb-1">
+              <span class="text-slate-300">Reducción de Cancelaciones B2B:</span>
+              <span id="lblCancelReduction" class="text-amber-400 font-bold font-mono">75%</span>
+            </div>
+            <input type="range" id="sliderCancel" min="0" max="95" value="75" step="5" oninput="runSimulation()" class="w-full accent-amber-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            <p class="text-[11px] text-slate-500 mt-1">Aprobación en 15 min evita cancelaciones por lentitud.</p>
+          </div>
+
+          <!-- Slider 3 -->
+          <div>
+            <div class="flex justify-between text-xs font-medium mb-1">
+              <span class="text-slate-300">Recuperación de Morosidad (PDD):</span>
+              <span id="lblPddReduction" class="text-amber-400 font-bold font-mono">65%</span>
+            </div>
+            <input type="range" id="sliderPdd" min="0" max="85" value="65" step="5" oninput="runSimulation()" class="w-full accent-amber-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            <p class="text-[11px] text-slate-500 mt-1">Cobranza preventiva automatizada vía correo y WhatsApp.</p>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800">
+            <button onclick="resetSimulation()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-xs font-medium rounded-lg text-slate-300 transition-colors">
+              Restablecer Valores Predeterminados
+            </button>
+          </div>
+        </div>
+
+        <!-- Simulation Results Cards & Chart -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            <div class="glass-card rounded-xl p-4 border border-slate-800 text-center">
+              <span class="text-xs uppercase text-slate-400 font-medium">EBITDA Inercial (Sin IA)</span>
+              <div class="text-2xl font-bold text-slate-400 mt-1 font-mono">USD 950,000</div>
+              <span class="text-xs text-rose-400 font-medium">Margen: 6.9%</span>
+            </div>
+
+            <div class="glass-card rounded-xl p-4 border border-amber-500/30 bg-amber-500/5 text-center">
+              <span class="text-xs uppercase text-amber-300 font-medium">EBITDA Proyectado (Con IA)</span>
+              <div id="simEbitda" class="text-2xl font-black text-emerald-400 mt-1 font-mono">USD 2,520,000</div>
+              <span id="simMargin" class="text-xs text-emerald-300 font-bold">Margen: 17.7%</span>
+            </div>
+
+            <div class="glass-card rounded-xl p-4 border border-emerald-500/30 bg-emerald-500/5 text-center">
+              <span class="text-xs uppercase text-emerald-300 font-medium">Ganancia Trimestral Neta</span>
+              <div id="simNetGain" class="text-2xl font-black text-amber-400 mt-1 font-mono">+USD 1,570,000</div>
+              <span class="text-xs text-slate-400">Atribuible a IA en T1 2027</span>
+            </div>
+
+          </div>
+
+          <!-- Scenario Comparison Chart -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <h4 class="font-bold text-white text-sm mb-3">Comparativa de Estructura de Costos: T1 2027 Inercial vs. Con IA</h4>
+            <div class="h-64">
+              <canvas id="chartSimScenario"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: AI CANVAS & GOBERNANZA LGPD        -->
+    <!-- ========================================== -->
+    <div id="tab-gov" class="tab-content hidden space-y-8">
+      
+      <!-- AI Canvas Overview -->
+      <div class="glass-card rounded-2xl p-6 border-l-4 border-amber-500">
+        <h2 class="text-2xl font-bold text-white">AI Canvas & Gobernanza Responsable</h2>
+        <p class="text-sm text-slate-300 mt-1">
+          Arquitectura estratégica de adopción, controles éticos, supervisión fiduciaria y cumplimiento de la Ley General de Protección de Datos (LGPD - Brasil).
+        </p>
+      </div>
+
+      <!-- 3 Use Cases Detail -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <div class="glass-card rounded-xl p-5 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-mono font-semibold">Caso 1: Quick Win</span>
+            <span class="text-xs text-slate-400 font-mono">Mes 1</span>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">Ingesta de Pedidos OCR+LLM</h4>
+          <p class="text-xs text-slate-300 leading-relaxed mb-3">
+            Extracción multimodal de datos desde propuestas en PDF y cruce con catálogo y reglas CIF/FOB. Carga automática en ERP sin digitación manual.
+          </p>
+          <div class="bg-slate-900 p-2.5 rounded border border-slate-800 text-[11px] text-slate-400">
+            <span class="text-amber-400 font-semibold block">Human-in-the-Loop (HITL):</span>
+            Obligatorio si la confianza OCR es <95% o hay divergencia de precios de lista >1%.
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-5 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-mono font-semibold">Caso 2: Estratégico</span>
+            <span class="text-xs text-slate-400 font-mono">Mes 2</span>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">Motor Predictivo de Crédito</h4>
+          <p class="text-xs text-slate-300 leading-relaxed mb-3">
+            Scoring predictivo en tiempo real consumiendo API Serasa y reglas de alzada. Aprobación instantánea para pedidos menores a USD 50,000.
+          </p>
+          <div class="bg-slate-900 p-2.5 rounded border border-slate-800 text-[11px] text-slate-400">
+            <span class="text-blue-400 font-semibold block">Human-in-the-Loop (HITL):</span>
+            Obligatorio para pedidos >USD 50,000, clientes en banda amarilla o plazos superiores a 90 días.
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-5 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded font-mono font-semibold">Caso 3: Estratégico</span>
+            <span class="text-xs text-slate-400 font-mono">Mes 3</span>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">Conciliador Financiero Continuo</h4>
+          <p class="text-xs text-slate-300 leading-relaxed mb-3">
+            Reconciliación continua entre las 3 hojas de Excel, bancos y ERP legado. Genera asientos de ajuste y reduce el cierre de 7 a 2 días hábiles.
+          </p>
+          <div class="bg-slate-900 p-2.5 rounded border border-slate-800 text-[11px] text-slate-400">
+            <span class="text-purple-400 font-semibold block">Human-in-the-Loop (HITL):</span>
+            El Controller debe autorizar cualquier reclasificación contable o provisión PDD superior a USD 5,000.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Governance Table: Permitted vs Prohibited -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div class="glass-card rounded-2xl p-5 border border-emerald-900/50 bg-emerald-950/10">
+          <h3 class="font-bold text-emerald-400 text-base flex items-center gap-2 mb-4">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">✓</span>
+            Prácticas Permitidas y Buenas Conductas
+          </h3>
+          <ul class="text-xs space-y-2.5 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✔</span>
+              <span>Uso exclusivo de APIs empresariales con política estricta de <strong>Zero Data Retention</strong> y no-entrenamiento.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✔</span>
+              <span>Enmascaramiento y anonimización de CPFs y datos bancarios privados previo al procesamiento.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✔</span>
+              <span>Auditorías trimestrales de sesgo en modelos de scoring crediticio garantizando neutralidad geográfica.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 font-bold">✔</span>
+              <span>Validación determinística de datos fiscales contra bases oficiales de Receita Federal y Sintegra.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 border border-rose-900/50 bg-rose-950/10">
+          <h3 class="font-bold text-rose-400 text-base flex items-center gap-2 mb-4">
+            <span class="w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs">✕</span>
+            Prácticas Estrictamente Prohibidas
+          </h3>
+          <ul class="text-xs space-y-2.5 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 font-bold">✖</span>
+              <span>Ingesta de información de estados financieros en ChatGPT público o herramientas gratuitas de navegador.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 font-bold">✖</span>
+              <span>Rechazo automático y autónomo de crédito a clientes sin derecho a apelación ni revisión humana.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 font-bold">✖</span>
+              <span>Ejecución de pagos o transferencias bancarias de tesorería sin doble firma física/digital humana.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 font-bold">✖</span>
+              <span>Compartir llaves API de bancos, certificados digitales A1 o credenciales de ERP en prompts.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: PROMPTS CLAUDE & EVIDENCIAS        -->
+    <!-- ========================================== -->
+    <div id="tab-prompts" class="tab-content hidden space-y-8">
+      
+      <div class="glass-card rounded-2xl p-6 border-l-4 border-purple-500">
+        <h2 class="text-2xl font-bold text-white">Prompts de Claude 3.7 Sonnet & Registro de Evidencias</h2>
+        <p class="text-sm text-slate-300 mt-1">
+          Banco de prompts utilizados para auditar la hoja financiera <code class="text-amber-400 font-mono">05_Finanzas_Presupuesto_vs_Real.xlsx</code> y construir los modelos predictivos.
+        </p>
+      </div>
+
+      <!-- Prompt 1 Box -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Prompt 1: Análisis Forense de Brecha de EBITDA & Cuellos de Botella</span>
+          <button onclick="copyPrompt('prompt1')" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded text-slate-300 border border-slate-700">Copiar</button>
+        </div>
+        <pre id="prompt1" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap border border-slate-800">
+Actúa como un Senior Financial Controller y Consultor en Lean Six Sigma. Analiza las tres hojas de cálculo del archivo adjunto '05_Finanzas_Presupuesto_vs_Real.xlsx' de Taranis Black:
+1. 'Resultados_trimestrales': Realiza un análisis vertical y horizontal comparando el Presupuesto vs. Real de T1 a T4. Explica por qué a pesar de facturar USD 48.50M (99.8% de meta), el EBITDA cayó un 41.4% (de USD 9.85M a USD 5.77M).
+2. Cuantifica exactamente cuánto dinero se perdió en:
+   - Fletes de emergencia por demoras.
+   - Cancelaciones de pedidos por retrasos en crédito.
+   - Multas y reentregas por errores en órdenes de compra.
+   - Inadimplencia B2B por falta de cobranza automatizada.
+3. Cruza estos datos con la hoja 'Cuellos_de_botella_y_costos' para validar si la suma de sobrecostos operativos justifica la brecha de USD 4.08 millones en EBITDA.
+Formatea tu respuesta con tablas ejecutivas y recomendaciones priorizadas de IA.
+        </pre>
+      </div>
+
+      <!-- Prompt 2 Box -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Prompt 2: Modelado Predictivo T1 2027 & Simulación Escenarios</span>
+          <button onclick="copyPrompt('prompt2')" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded text-slate-300 border border-slate-700">Copiar</button>
+        </div>
+        <pre id="prompt2" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap border border-slate-800">
+Con base en los datos históricos y la tendencia de deterioro entre T1 y T4 de Taranis Black, construye un modelo predictivo para el próximo trimestre (T1 2027) en dólares estadounidenses (USD):
+Modela dos escenarios contrastados:
+- Escenario Inercial (Sin IA): Si el volumen de ventas crece pero persisten los 5 días de retraso en el cierre y las 48h de crédito, proyecta el impacto en fletes de emergencia (manteniendo la tasa del 2.8% de facturación) y cancelaciones.
+- Escenario Optimizado (Con IA): Asume la implementación de la Ingesta Inteligente OCR y el Motor de Crédito Descentralizado en el Mes 1. Modela una reducción del 60% en fletes urgentes, 75% en cancelaciones y normalización de la morosidad a 1.2%.
+Calcula la variación en EBITDA, margen neto y el ROI del proyecto (asumiendo un CAPEX de implementación de USD 185k).
+        </pre>
+      </div>
+
+      <!-- Evidences Table -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-800">
+        <h3 class="font-bold text-lg text-white mb-4">Tabla Oficial de Evidencias y Entregables del Challenge</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900 text-slate-300">
+                <th class="py-2.5 px-3 font-semibold">Entregable</th>
+                <th class="py-2.5 px-3 font-semibold">Descripción Técnica</th>
+                <th class="py-2.5 px-3 font-semibold">Ubicación / Enlace</th>
+                <th class="py-2.5 px-3 font-semibold">Estado</th>
+                <th class="py-2.5 px-3 font-semibold">Supervisión (HITL)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2 px-3 font-bold text-white">Informe Ejecutivo Oficial</td>
+                <td class="py-2 px-3">Documento formal con Ruta 0 y Ruta 4 (Finanzas)</td>
+                <td class="py-2 px-3 font-mono text-amber-400">INFORME_EJECUTIVO_TARANIS_BLACK_RUTA4_FINANZAS.docx</td>
+                <td class="py-2 px-3 text-emerald-400 font-semibold">Completado</td>
+                <td class="py-2 px-3">Alineado a rúbrica Alura G11</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2 px-3 font-bold text-white">Panel Financiero Interactivo</td>
+                <td class="py-2 px-3">Live Artifact interactivo con simulador y gráficas</td>
+                <td class="py-2 px-3 font-mono text-amber-400">dashboard_financiero_taranis_black.html</td>
+                <td class="py-2 px-3 text-emerald-400 font-semibold">Operativo</td>
+                <td class="py-2 px-3">Supervisión dinámica con sliders</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2 px-3 font-bold text-white">Matriz Lean SIPOC As-Is</td>
+                <td class="py-2 px-3">Mapeo de 5 etapas, tiempos de ciclo y desperdicio</td>
+                <td class="py-2 px-3 font-mono text-amber-400">Sección Lean del Informe</td>
+                <td class="py-2 px-3 text-emerald-400 font-semibold">Completado</td>
+                <td class="py-2 px-3">Auditoría de SLAs de entrega</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2 px-3 font-bold text-white">Diagrama Ishikawa 6M</td>
+                <td class="py-2 px-3">Causas de 2do y 3er nivel del retraso de 5 días</td>
+                <td class="py-2 px-3 font-mono text-amber-400">Sección Lean del Informe</td>
+                <td class="py-2 px-3 text-emerald-400 font-semibold">Completado</td>
+                <td class="py-2 px-3">Validado con líderes de CD Joinville</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-2 px-3 font-bold text-white">Política de IA y LGPD</td>
+                <td class="py-2 px-3">Políticas de uso permitido, prohibido y comité ético</td>
+                <td class="py-2 px-3 font-mono text-amber-400">Etapa 3 del Informe</td>
+                <td class="py-2 px-3 text-emerald-400 font-semibold">Completado</td>
+                <td class="py-2 px-3">Cláusula Zero Data Retention</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1">
+      <p class="font-medium text-slate-400">CHALLENGE ONE G11 — AI FOR BUSINESS | Taranis Black Consultoría Estratégica</p>
+      <p>Estudiante: <span class="text-slate-300 font-semibold">Francisco Israel Mesillas Hernández</span> (israel.mecillas@gmail.com)</p>
+      <p class="text-[11px] text-slate-600">Desarrollado para evaluación oficial en Oracle Next Education & Alura Latam</p>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Logic & Charts -->
+  <script>
+    // Tab Switching Function
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-500', 'text-slate-950', 'shadow-md');
+        btn.classList.add('text-slate-400');
+      });
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-amber-500', 'text-slate-950', 'shadow-md');
+      }
+
+      // Resize charts when switching tabs
+      if (tabId === 'tab-sim') {
+        setTimeout(initSimChart, 50);
+      }
+    }
+
+    // Copy Prompt Function
+    function copyPrompt(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Prompt copiado al portapapeles.");
+      });
+    }
+
+    // Chart.js: Quarterly Performance Chart
+    const ctxQuarterly = document.getElementById('chartQuarterly').getContext('2d');
+    new Chart(ctxQuarterly, {
+      type: 'bar',
+      data: {
+        labels: ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'],
+        datasets: [
+          {
+            label: 'Ingresos Brutos (USD M)',
+            data: [10.85, 11.75, 12.50, 13.40],
+            backgroundColor: 'rgba(37, 99, 235, 0.6)',
+            borderColor: '#2563eb',
+            borderWidth: 1,
+            yAxisID: 'y'
+          },
+          {
+            label: 'EBITDA Operativo Real (USD M)',
+            data: [1.78, 1.83, 1.16, 1.00],
+            type: 'line',
+            borderColor: '#f43f5e',
+            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointBackgroundColor: '#f43f5e',
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 11 } } }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: {
+            title: { display: true, text: 'Ingresos (USD M)', color: '#94a3b8' },
+            ticks: { color: '#94a3b8' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          },
+          y1: {
+            position: 'right',
+            title: { display: true, text: 'EBITDA (USD M)', color: '#f43f5e' },
+            ticks: { color: '#f43f5e' },
+            grid: { drawOnChartArea: false }
+          }
+        }
+      }
+    });
+
+    // Chart.js: Friction Cost Breakdown
+    const ctxFriction = document.getElementById('chartFrictionCosts').getContext('2d');
+    new Chart(ctxFriction, {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Fletes de Emergencia (USD 1.36M)',
+          'Cancelaciones por Retraso (USD 675k)',
+          'Morosidad / PDD (USD 670k)',
+          'Reentregas y Multas (USD 515k)',
+          'Horas Extras y Auditorías (USD 260k)',
+          'Desperdicio Fabril (USD 410k)'
+        ],
+        datasets: [{
+          data: [1360000, 6750000, 670000, 515000, 260000, 410000],
+          backgroundColor: [
+            '#e11d48',
+            '#f97316',
+            '#d97706',
+            '#eab308',
+            '#64748b',
+            '#334155'
+          ],
+          borderWidth: 2,
+          borderColor: '#0f172a'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#cbd5e1', font: { size: 10, family: 'Plus Jakarta Sans' }, boxWidth: 12 }
+          }
+        }
+      }
+    });
+
+    // Simulation Interactive Logic
+    let simChartInstance = null;
+
+    function runSimulation() {
+      const freightPct = parseInt(document.getElementById('sliderFreight').value);
+      const cancelPct = parseInt(document.getElementById('sliderCancel').value);
+      const pddPct = parseInt(document.getElementById('sliderPdd').value);
+
+      document.getElementById('lblFreightReduction').innerText = freightPct + '%';
+      document.getElementById('lblCancelReduction').innerText = cancelPct + '%';
+      document.getElementById('lblPddReduction').innerText = pddPct + '%';
+
+      // Base Q1 2027 Inercial Assumptions
+      const baseGrossRev = 13800000;
+      const baseFreight = 1320000;
+      const baseCancel = 460000;
+      const basePdd = 430000;
+      const baseReentregas = 290000;
+      const baseOtherOpex = 2800000;
+      const baseCmv = 5850000;
+      const baseTaxes = 2350000;
+
+      // Savings
+      const freightSaving = baseFreight * (freightPct / 100);
+      const cancelSaving = baseCancel * (cancelPct / 100);
+      const pddSaving = basePdd * (pddPct / 100);
+      const reentregaSaving = baseReentregas * 0.70; // 70% reduction in error
+
+      const totalTrimSaving = freightSaving + cancelSaving + pddSaving + reentregaSaving;
+      
+      const inercialEbitda = 950000;
+      const projectedEbitda = Math.round(inercialEbitda + totalTrimSaving);
+      const netGain = projectedEbitda - inercialEbitda;
+      const projectedMargin = ((projectedEbitda / (baseGrossRev + cancelSaving)) * 100).toFixed(1);
+
+      document.getElementById('simEbitda').innerText = 'USD ' + projectedEbitda.toLocaleString();
+      document.getElementById('simMargin').innerText = 'Margen: ' + projectedMargin + '%';
+      document.getElementById('simNetGain').innerText = '+USD ' + netGain.toLocaleString();
+
+      updateSimChart(baseFreight - freightSaving, baseCancel - cancelSaving, basePdd - pddSaving, projectedEbitda);
+    }
+
+    function resetSimulation() {
+      document.getElementById('sliderFreight').value = 60;
+      document.getElementById('sliderCancel').value = 75;
+      document.getElementById('sliderPdd').value = 65;
+      runSimulation();
+    }
+
+    function initSimChart() {
+      if (simChartInstance) return;
+      const ctx = document.getElementById('chartSimScenario').getContext('2d');
+      simChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Fletes CD (USD)', 'Cancelaciones (USD)', 'Morosidad PDD (USD)', 'EBITDA Trimestral (USD)'],
+          datasets: [
+            {
+              label: 'Escenario Inercial (Sin IA)',
+              data: [1320000, 460000, 430000, 950000],
+              backgroundColor: 'rgba(225, 29, 72, 0.6)',
+              borderColor: '#e11d48',
+              borderWidth: 1
+            },
+            {
+              label: 'Escenario Optimizado (Con IA)',
+              data: [528000, 115000, 150500, 2520000],
+              backgroundColor: 'rgba(16, 185, 129, 0.7)',
+              borderColor: '#10b981',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 11 } } }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+    }
+
+    function updateSimChart(freight, cancel, pdd, ebitda) {
+      if (!simChartInstance) return;
+      simChartInstance.data.datasets[1].data = [freight, cancel, pdd, ebitda];
+      simChartInstance.update();
+    }
+  </script>
+</body>
+</html>
