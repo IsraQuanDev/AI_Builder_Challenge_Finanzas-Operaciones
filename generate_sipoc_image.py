@@ -1,177 +1,189 @@
 # -*- coding: utf-8 -*-
 """
-Generador de la imagen de alta resolución para la Matriz SIPOC de Taranis Black
-(Ruta 4: Finanzas y Operaciones - ONE G11)
+Script perfeccionado para generar la Matriz SIPOC sin traslape de texto.
+Usa textwrap para ajustar cada línea exactamente dentro del ancho de su columna.
 """
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import os
+import textwrap
 
-def generate_sipoc():
-    fig, ax = plt.subplots(figsize=(15, 9.5), dpi=300)
-    fig.patch.set_facecolor('#0f172a') # Dark slate background
-    ax.set_facecolor('#0f172a')
-    
-    # Header Information
-    fig.text(0.05, 0.94, "TARANIS BLACK | MATRIZ SIPOC DEL MACROPROCESO (LEAN SIX SIGMA)", 
-             fontsize=16, fontweight='bold', color='#f8fafc', family='sans-serif')
-    fig.text(0.05, 0.91, "Flujo As-Is: Aprobación de Pedidos, Facturación y Expedición B2B  |  Especialización: Finanzas & Operaciones (ONE G11)", 
+def generate_sipoc_perfect():
+    # Large high-res canvas (16 x 11 inches)
+    fig, ax = plt.subplots(figsize=(16, 10.5), dpi=300)
+    fig.patch.set_facecolor('#0b0f19')
+    ax.set_facecolor('#0b0f19')
+
+    # Title & Subtitle
+    fig.text(0.04, 0.95, "TARANIS BLACK | MATRIZ SIPOC DEL MACROPROCESO (LEAN SIX SIGMA)", 
+             fontsize=17, fontweight='bold', color='#ffffff', family='sans-serif')
+    fig.text(0.04, 0.92, "Flujo As-Is: Aprobación de Pedidos, Facturación y Expedición B2B  |  Ruta 4: Finanzas y Operaciones (ONE G11)", 
              fontsize=10.5, color='#38bdf8', family='sans-serif')
 
-    # Top KPI Diagnostic Bar
-    kpi_bar = patches.FancyBboxPatch((0.05, 0.82), 0.90, 0.065, boxstyle="round,pad=0.01",
-                                     fc='#1e293b', ec='#334155', transform=fig.transFigure)
-    fig.patches.append(kpi_bar)
-    
-    fig.text(0.08, 0.84, "TIEMPO DE CICLO ACTUAL (LEAD TIME): >5 Días Hábiles (~2,400 min)", 
-             fontsize=9.5, fontweight='bold', color='#f43f5e', family='sans-serif')
-    fig.text(0.42, 0.84, "TIEMPO DE VALOR AGREGADO: ~65 min", 
-             fontsize=9.5, fontweight='bold', color='#10b981', family='sans-serif')
-    fig.text(0.68, 0.84, "EFICIENCIA DEL FLUJO (PCE): 2.7% (97.3% Desperdicio/Muda)", 
-             fontsize=9.5, fontweight='bold', color='#f59e0b', family='sans-serif')
+    # Top KPI Diagnostic Badges (Separate cards so they never collide)
+    kpis = [
+        ("LEAD TIME AS-IS", ">5 Días Hábiles (~2,400 min)", "#f43f5e", 0.04, 0.28),
+        ("TOUCH TIME (VALOR AGREGADO)", "~65 minutos por orden", "#10b981", 0.35, 0.28),
+        ("EFICIENCIA DEL FLUJO (PCE)", "2.7% (97.3% Desperdicio / Muda)", "#f59e0b", 0.66, 0.30)
+    ]
+    for label, val, col, x, w in kpis:
+        kpi_patch = patches.FancyBboxPatch((x, 0.835), w, 0.065, boxstyle="round,pad=0.01",
+                                          fc='#1e293b', ec=col, lw=1.5, transform=fig.transFigure)
+        fig.patches.append(kpi_patch)
+        fig.text(x + 0.015, 0.875, label, fontsize=8, fontweight='bold', color='#94a3b8', family='sans-serif')
+        fig.text(x + 0.015, 0.845, val, fontsize=9.5, fontweight='bold', color=col, family='sans-serif')
 
-    # 5 Column Definitions
-    col_width = 1.82
-    gap = 0.15
-    start_x = 0.1
-    y_top = 8.0
+    # 5 Columns Setup
+    # Total width available: x from 0.4 to 9.6 -> width = 9.2 / 5 = 1.84
+    col_w = 1.72
+    col_gap = 0.16
+    start_x = 0.4
+    y_header = 7.7
     
-    columns_data = [
+    cols = [
         {
             "letter": "S",
             "name": "Suppliers\n(Proveedores)",
             "color": "#6366f1",
-            "header_bg": "#312e81",
+            "bg": "#1e1b4b",
             "items": [
-                ("Consultores B2B & SDRs (São Paulo)", "Emiten y envían propuestas comerciales firmadas en PDF vía email manual."),
-                ("Clientes Corporativos (Compradores B2B)", "Facilitan datos fiscales (CNPJ, IE, Dirección fiscal de entrega)."),
-                ("Buró de Crédito (Serasa Experian)", "Proveedor de score crediticio, deudas activas y protestas comerciales."),
-                ("Gerente Financiero (Aprobador)", "Valida discrecionalmente los límites de crédito de cada orden de compra.")
+                ("Consultores B2B & SDRs (SP)", "Ventas B2B envía propuestas firmadas en PDF escaneado vía email."),
+                ("Clientes Corporativos B2B", "Compradores corporativos que entregan datos fiscales (CNPJ, IE, Dirección)."),
+                ("Buró Serasa Experian", "Proveedor de score crediticio, protestas y deudas financieras activas."),
+                ("Gerente Financiero (Alzada)", "Aprobador centralizado y discrecional de límites de crédito.")
             ]
         },
         {
             "letter": "I",
             "name": "Inputs\n(Entradas)",
             "color": "#0ea5e9",
-            "header_bg": "#075985",
+            "bg": "#0c4a6e",
             "items": [
-                ("Propuesta Comercial en PDF Escaneado", "No estructurada, enviada por correo informal sin validación previa."),
-                ("Ficha Fiscal y Padrón Tributario", "Tarjeta de CNPJ, comprobante de domicilio e Inscripción Estatal."),
+                ("Propuesta en PDF", "Documento comercial no estructurado enviado por correo sin validación."),
+                ("Ficha Fiscal y Padrón", "Tarjeta de CNPJ, comprobante de dirección e Inscripción Estatal."),
                 ("Score y Reporte Serasa", "Consulta manual externa de 40 min en el portal web de Serasa."),
-                ("Excel 'Controle_Limites_2026.xlsx'", "Hoja de cálculo local desincronizada utilizada para verificar cupos.")
+                ("Excel de Límites Local", "Archivo local desincronizado 'Controle_Limites_2026.xlsx'.")
             ]
         },
         {
             "letter": "P",
             "name": "Process\n(Macroproceso As-Is)",
             "color": "#f59e0b",
-            "header_bg": "#78350f",
+            "bg": "#78350f",
             "items": [
-                ("Paso 1: Recepción en Email", ">40 correos/día sin prioridad ni validación de inventario. (Espera: 2-4h)."),
-                ("Paso 2: Consulta Manual Crédito", "Asistente alterna entre 3 ventanas (ERP, Serasa, Excel). (Ciclo: 40 min)."),
-                ("Paso 3-4: Espera Gerente (CUELLO)", "Retención en bandeja de entrada por comités y viajes. (Retención: 24h-48h)."),
-                ("Paso 5: Facturación & Picking", "Copia manual al ERP (6.8% error) y correo manual al CD Joinville. (Espera: 24h).")
+                ("1. Recepción en Email", ">40 correos/día sin prioridad ni validación de inventario.\n(Espera: 2 a 4h)."),
+                ("2. Consulta Crédito", "Asistente alterna entre 3 pantallas (ERP, Serasa, Excel).\n(Ciclo: 40 min)."),
+                ("3-4. Aprobación Gerente", "★ CUELLO CRÍTICO:\nRetención en bandeja de 24h a 48h hábiles por comités."),
+                ("5. Facturación y Picking", "Copia manual al ERP (6.8% error) y aviso al CD Joinville.\n(Espera: 24h).")
             ]
         },
         {
             "letter": "O",
             "name": "Outputs\n(Salidas)",
             "color": "#10b981",
-            "header_bg": "#064e3b",
+            "bg": "#064e3b",
             "items": [
                 ("Orden en Cola no Estructurada", "Correo en bandeja de entrada sin prioridad comercial clara."),
-                ("Dossier Preliminar en Excel Local", "Resumen de crédito en hoja no sincronizada con el ERP core."),
-                ("Autorización por Email ('De acuerdo')", "Respuesta informal del gerente sin registro auditable."),
-                ("NF-e, Boletos y Picking List", "DANFE, XML, boletos a 30/60/90 y orden de expedición al CD Joinville.")
+                ("Dossier de Crédito en Excel", "Resumen en hoja local no sincronizada con el ERP core."),
+                ("Aprobación por Email", "Respuesta informal del gerente ('De acuerdo') sin trazabilidad."),
+                ("NF-e, Boletos y Picking List", "DANFE, XML, boletos bancarios a 30/60/90 y orden de despacho.")
             ]
         },
         {
             "letter": "C",
             "name": "Customers\n(Clientes)",
             "color": "#a855f7",
-            "header_bg": "#581c87",
+            "bg": "#581c87",
             "items": [
-                ("Asistente Financiero de Crédito", "Cliente interno del correo inicial de ventas."),
-                ("Gerente Financiero (Alzada)", "Cliente interno que recibe el resumen para autorizar crédito."),
-                ("Equipo de Facturación y Contabilidad", "Cliente interno que emite la factura y concilia los asientos."),
-                ("Cliente Corporativo & CD Joinville", "Clientes finales que reciben la mercancía y padecen los retrasos.")
+                ("Asistente de Crédito", "Cliente interno del correo inicial enviado por el área comercial."),
+                ("Gerente Financiero", "Cliente interno que recibe el resumen para autorizar la alzada."),
+                ("Facturación y Contabilidad", "Cliente interno que emite la factura y concilia los asientos."),
+                ("Cliente Corporativo & CD", "Clientes finales que reciben la mercancía y sufren los retrasos.")
             ]
         }
     ]
 
-    for idx, col in enumerate(columns_data):
-        cx = start_x + idx * (col_width + gap)
+    for c_idx, c_data in enumerate(cols):
+        cx = start_x + c_idx * (col_w + col_gap)
         
-        # Column Header Box
-        head_box = patches.FancyBboxPatch((cx, y_top), col_width, 1.1, boxstyle="round,pad=0.08",
-                                          fc=col["header_bg"], ec=col["color"], lw=2)
-        ax.add_patch(head_box)
+        # Header Box
+        header_patch = patches.FancyBboxPatch((cx, y_header), col_w, 0.95, boxstyle="round,pad=0.05",
+                                              fc=c_data["bg"], ec=c_data["color"], lw=2)
+        ax.add_patch(header_patch)
         
-        # Badge Letter
-        badge = patches.Circle((cx + 0.35, y_top + 0.55), 0.28, fc=col["color"], ec='#ffffff', lw=1.5)
-        ax.add_patch(badge)
-        ax.text(cx + 0.35, y_top + 0.55, col["letter"], fontsize=13, fontweight='bold', 
+        # Circle Badge Letter
+        badge_circle = patches.Circle((cx + 0.32, y_header + 0.48), 0.24, fc=c_data["color"], ec='#ffffff', lw=1.2)
+        ax.add_patch(badge_circle)
+        ax.text(cx + 0.32, y_header + 0.48, c_data["letter"], fontsize=12, fontweight='bold', 
                 color='#0f172a', ha='center', va='center', family='sans-serif')
         
-        # Header Text
-        ax.text(cx + 0.75, y_top + 0.55, col["name"], fontsize=10.5, fontweight='bold', 
+        # Header Label
+        ax.text(cx + 0.68, y_header + 0.48, c_data["name"], fontsize=9.5, fontweight='bold', 
                 color='#ffffff', va='center', family='sans-serif')
-
-        # Cards inside Column
-        card_y = y_top - 0.25
-        card_height = 1.45
-        card_gap = 0.22
         
-        for item_title, item_desc in col["items"]:
-            card_y -= card_height
+        # 4 Cards per column
+        card_y = y_header - 0.2
+        card_h = 1.55
+        card_margin = 0.16
+        
+        for item_title, item_desc in c_data["items"]:
+            card_y -= card_h
             
-            # Determine card background (highlight process bottlenecks)
             is_bottleneck = "CUELLO" in item_title
-            bg_color = "#3b1318" if is_bottleneck else "#1e293b"
-            border_color = "#f43f5e" if is_bottleneck else "#334155"
+            c_bg = "#450a0a" if is_bottleneck else "#1e293b"
+            c_border = "#f43f5e" if is_bottleneck else "#334155"
+            c_lw = 2.0 if is_bottleneck else 1.0
             
-            card_box = patches.FancyBboxPatch((cx, card_y), col_width, card_height - 0.05, 
-                                              boxstyle="round,pad=0.06",
-                                              fc=bg_color, ec=border_color, lw=1.2)
-            ax.add_patch(card_box)
+            # Draw card container
+            box = patches.FancyBboxPatch((cx, card_y), col_w, card_h - 0.06, boxstyle="round,pad=0.04",
+                                         fc=c_bg, ec=c_border, lw=c_lw)
+            ax.add_patch(box)
             
-            # Card Title
-            title_color = "#fb7185" if is_bottleneck else "#f8fafc"
-            ax.text(cx + 0.1, card_y + card_height - 0.28, item_title, 
-                    fontsize=8.5, fontweight='bold', color=title_color, family='sans-serif')
+            # Wrap Title (max 21 chars per line)
+            title_wrapped = "\\n".join(textwrap.wrap(item_title, width=21))
+            t_color = "#fb7185" if is_bottleneck else "#f8fafc"
+            t_fontweight = 'bold'
             
-            # Card Description
-            ax.text(cx + 0.1, card_y + card_height - 0.55, item_desc, 
-                    fontsize=7.3, color='#94a3b8', family='sans-serif', wrap=True)
+            ax.text(cx + 0.08, card_y + card_h - 0.24, title_wrapped, 
+                    fontsize=8.5, fontweight=t_fontweight, color=t_color, family='sans-serif', va='top')
             
-            card_y -= card_gap
+            # Calculate height offset based on title lines
+            num_title_lines = len(title_wrapped.split("\\n"))
+            desc_offset = 0.24 + (num_title_lines * 0.22)
+            
+            # Wrap Description (max 25 chars per line)
+            desc_wrapped = "\\n".join(textwrap.wrap(item_desc, width=25))
+            d_color = "#fecdd3" if is_bottleneck else "#94a3b8"
+            
+            ax.text(cx + 0.08, card_y + card_h - desc_offset - 0.05, desc_wrapped, 
+                    fontsize=7.2, color=d_color, family='sans-serif', va='top')
+            
+            card_y -= card_margin
 
-    # Flow arrows connecting columns
+    # Connection Arrows between Headers
     for i in range(4):
-        arrow_x = start_x + (i + 1) * col_width + i * gap + gap/2
-        ax.annotate('', xy=(arrow_x + 0.06, y_top + 0.55), xytext=(arrow_x - 0.06, y_top + 0.55),
+        ax_arrow = start_x + (i + 1) * col_w + i * col_gap + (col_gap / 2)
+        ax.annotate('', xy=(ax_arrow + 0.06, y_header + 0.48), xytext=(ax_arrow - 0.06, y_header + 0.48),
                     arrowprops=dict(arrowstyle="->", color='#64748b', lw=2.5))
 
-    # Axis Limits
+    # Axis config
     ax.set_xlim(0, 10)
-    ax.set_ylim(0.5, 9.5)
+    ax.set_ylim(0.2, 9.2)
     ax.axis('off')
 
     # Footer Metadata
-    fig.text(0.05, 0.03, "Estudiante: Francisco Israel Mesillas Hernández  |  israel.mecillas@gmail.com  |  Ruta 4: Finanzas & Operaciones  |  Alura & Oracle Next Education (G11)", 
+    fig.text(0.04, 0.02, "Estudiante: Francisco Israel Mesillas Hernández  |  israel.mecillas@gmail.com  |  Ruta 4: Finanzas & Operaciones  |  Challenge ONE G11 AI for Business", 
              fontsize=8.5, color='#64748b', family='sans-serif')
 
-    # Save PNG files
-    out_root = r"C:\Users\52477\Desktop\challengeAIbuilder\matriz_sipoc_taranis_black.png"
-    out_lean = r"C:\Users\52477\Desktop\challengeAIbuilder\02_Diagnostico_Lean_Operaciones\matriz_sipoc_taranis_black.png"
-    out_art = r"C:\Users\52477\.gemini\antigravity\brain\65b23f9f-a310-40e5-923f-54f1f937153f\matriz_sipoc_taranis_black.png"
+    # Save to all target paths
+    out1 = r"C:\Users\52477\Desktop\challengeAIbuilder\matriz_sipoc_taranis_black.png"
+    out2 = r"C:\Users\52477\Desktop\challengeAIbuilder\02_Diagnostico_Lean_Operaciones\matriz_sipoc_taranis_black.png"
+    out3 = r"C:\Users\52477\.gemini\antigravity\brain\65b23f9f-a310-40e5-923f-54f1f937153f\matriz_sipoc_taranis_black.png"
 
-    plt.savefig(out_root, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
-    plt.savefig(out_lean, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
-    plt.savefig(out_art, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out1, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out2, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out3, dpi=300, bbox_inches='tight', facecolor=fig.get_facecolor())
     plt.close()
-    
-    print(f"SIPOC Image generated at:\n- {out_root}\n- {out_lean}\n- {out_art}")
+    print("SIPOC Image successfully generated without text overlap!")
 
 if __name__ == '__main__':
-    generate_sipoc()
+    generate_sipoc_perfect()
