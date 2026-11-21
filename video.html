@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video de Demostración | Taranis Black - Challenge ONE G11</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --gold: #f59e0b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1080px;
+      width: 100%;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .author-info {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .author-info strong {
+      color: #ffffff;
+    }
+
+    /* Video Player Card */
+    .video-card {
+      background: var(--card-bg);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+      margin-bottom: 30px;
+    }
+    .video-header {
+      padding: 14px 20px;
+      background: #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+    .video-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--emerald);
+    }
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+    .video-actions {
+      padding: 16px 20px;
+      background: #111827;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid var(--card-border);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #0284c7;
+      color: #ffffff;
+      border: 1px solid #38bdf8;
+    }
+    .btn-primary:hover {
+      background: #0369a1;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+    .btn-secondary {
+      background: #1f2937;
+      color: #e2e8f0;
+      border: 1px solid #374151;
+    }
+    .btn-secondary:hover {
+      background: #374151;
+      color: #ffffff;
+    }
+    .btn-emerald {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #10b981;
+    }
+    .btn-emerald:hover {
+      background: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Breakdown Section */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .timeline-item {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .item-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .item-duration {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+    .item-desc {
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    /* Metrics Summary */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media (max-width: 768px) {
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .metric-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 14px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .metric-val {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+    .metric-lbl {
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 13px;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Oracle Next Education & Alura Latam • Challenge ONE G11</div>
+      <h1>Video Oficial de Demostración y Defensa Ejecutiva</h1>
+      <div class="subtitle">Ruta 4: IA para Finanzas y Operaciones — Caso Taranis Black</div>
+      <div class="author-info">
+        Consultor Líder: <strong>Francisco Israel Mesillas Hernández</strong> | 
+        <span>israel.mecillas@gmail.com</span> | Cohorte G11
+      </div>
+    </header>
+
+    <!-- Main Video Player -->
+    <div class="video-card">
+      <div class="video-header">
+        <span><span class="status-dot"></span> Reproductor Oficial de Alta Definición (1080p MP4)</span>
+        <span style="color: #94a3b8; font-size: 12px;">Duración: ~2:15 min (Límite: &lt;5 min)</span>
+      </div>
+      
+      <video controls poster="slide1_portada.png" preload="metadata">
+        <source src="video_demostracion_taranis_black.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción directa de video HTML5. Puedes descargarlo directamente abajo.
+      </video>
+
+      <div class="video-actions">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="video_demostracion_taranis_black.mp4" download class="btn btn-primary">
+            📥 Descargar Video MP4 (Alta Calidad)
+          </a>
+          <a href="index.html" class="btn btn-emerald">
+            📊 Abrir Dashboard Financiero Interactivo
+          </a>
+        </div>
+        <a href="https://github.com/IsraQuanDev/AI_Builder_Challenge_Finanzas-Operaciones" target="_blank" class="btn btn-secondary">
+          🐙 Repositorio GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Video Breakdown Guide -->
+    <div class="section-card">
+      <div class="section-title">
+        <span>📑 Estructura y Capítulos del Video de Demostración</span>
+      </div>
+      <div class="timeline-grid">
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 1</span>
+            <span class="item-duration">0:00 - 0:20</span>
+          </div>
+          <div class="item-title">Portada & Presentación Oficial</div>
+          <div class="item-desc">Presentación de Francisco Israel Mesillas Hernández (ONE G11) y alcance de la consultoría estratégica de IA para Taranis Black.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 2</span>
+            <span class="item-duration">0:20 - 0:52</span>
+          </div>
+          <div class="item-title">Diagnóstico Financiero & Colapso de EBITDA</div>
+          <div class="item-desc">Cumplimiento de ventas al 99.8% (USD 48.5M) con destrucción de USD 4.08M de EBITDA por fricción operativa en fletes y cancelaciones.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 3</span>
+            <span class="item-duration">0:52 - 1:12</span>
+          </div>
+          <div class="item-title">Diagnóstico Lean: Matriz SIPOC</div>
+          <div class="item-desc">Análisis del macroproceso: Lead Time de >5 días frente a 65 min de valor agregado (Eficiencia de Flujo del 2.7%, 97.3% desperdicio).</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 4</span>
+            <span class="item-duration">1:12 - 1:35</span>
+          </div>
+          <div class="item-title">Causa-Raíz: Diagrama de Ishikawa (6M)</div>
+          <div class="item-desc">Identificación de cuellos de botella: retención de 48h en gerencia, tasa de error manual del 6.8% y falta de sincronización de sistemas.</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 5</span>
+            <span class="item-duration">1:35 - 2:00</span>
+          </div>
+          <div class="item-title">AI Canvas & Matriz Esfuerzo x Impacto</div>
+          <div class="item-desc">Hoja de ruta con 3 soluciones: Ingesta OCR inteligente (M1), Scoring Crediticio predictivo (M2) y Conciliador Continuo (M3).</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-num">Capítulo 6</span>
+            <span class="item-duration">2:00 - 2:25</span>
+          </div>
+          <div class="item-title">Conclusiones, ROI (1,510%) y Gobernanza</div>
+          <div class="item-desc">Ahorro anual neto de USD 2.79M, Payback de 22 días, supervisión HITL y cumplimiento estricto de la ley LGPD de Brasil.</div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Summary -->
+      <div class="metrics-row">
+        <div class="metric-box">
+          <div class="metric-lbl">Inversión Año 1</div>
+          <div class="metric-val" style="color: var(--accent);">USD 185k</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">Ahorro Anual Bruto</div>
+          <div class="metric-val" style="color: var(--emerald);">USD 2.98M</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">Retorno de Inversión (ROI)</div>
+          <div class="metric-val" style="color: var(--gold);">1,510.8%</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">Periodo de Recuperación</div>
+          <div class="metric-val" style="color: #c084fc;">22 Días</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Challenge ONE G11 — Oracle Next Education & Alura Latam | 
+      <a href="https://github.com/IsraQuanDev/AI_Builder_Challenge_Finanzas-Operaciones" target="_blank">Repositorio en GitHub</a> |
+      <a href="index.html">Dashboard Financiero</a>
+    </footer>
+  </div>
+
+</body>
+</html>
